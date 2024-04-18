@@ -1,51 +1,280 @@
-body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: url('img.jpg') no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-.wrapper {
-    height: 600px;
-    width:1200px;
-    background:white;
-    border: 2px solid rgba(255,255,255,.2);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 10px rgba(0,0,0,.2);
-    color: #fff;
-    border-radius: 10px;
-    padding: 30px 40px;
-    display: flex;
-    align-content: space-between;
-    flex-direction: row;
-    gap:1px;
-}
-.side_bar{
-    flex-grow: 0.2;
-    height:100%;
-    width:50px;
-    background-color: #df9429;
-}
-.content_wrapper{
-    flex-grow: 1;
-    height:100%;
-    width:50px;
-    display: flex;
-    flex-direction: column;
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap');
 
+:root{
+    --main-color:#8e44ad;
+    --red:#e74c3c;
+    --orange:#f39c12;
+    --light-color:#888;
+    --light-bg:#eee;
+    --black:#2c3e50;
+    --white:#fff;
+    --border:.1rem solid rgba(0,0,0,.2);
+    --table-cl:#ddd
+}
+
+*{
+    font-family: 'Nunito', sans-serif;
+    margin:0; padding:0;
+    box-sizing: border-box;
+    outline: none; border:none;
+    text-decoration: none;
+}
+
+*::selection{
+    background-color: var(--main-color);
+    color:#fff;
+}
+
+html{
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+
+html::-webkit-scrollbar{
+    width: 1rem;
+    height: .5rem;
+}
+
+html::-webkit-scrollbar-track{
+    background-color: transparent;
+}
+
+html::-webkit-scrollbar-thumb{
+    background-color: var(--main-color);
+}
+
+body{
+    background-color: var(--light-bg);
+    padding-left: 30rem;
 }
 .header{
-    box-shadow: 0 0 10px rpga(0,0,0,.1);
-    flex: 0.1;
-    height:50px;
-    width:100%;
+    position: sticky;
+    top:0; left:0; right: 0;
+    background-color: var(--white);
+    z-index: 1000;
+    border-bottom: var(--border);
+}
+
+.header .flex{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 1.5rem 2rem;
+}
+
+.header .flex .logo{
+    font-size: 2.5rem;
+    color: var(--black);
+}
+
+.header .flex .search-form{
+    width: 50rem;
+    border-radius: .5rem;
+    background-color: var(--table-cl);
+    padding:1.5rem 2rem;
+    display: flex;
+    gap:2rem;
 
 }
-.content{
-    flex: 1;
-    height:50px;
-    width:100%;
-    background-color: gray
+
+.header .flex .search-form input{
+    width: 100%;
+    font-size: 1.8rem;
+    color:var(--black);
+    background:none;
 }
+
+.header .flex .search-form button{
+    background:none;
+    font-size: 2rem;
+    cursor: pointer;
+    color:var(--black);
+}
+
+.header .flex .search-form button:hover{
+    color: var(--main-color);
+}
+
+.header .flex .icons div{
+    font-size: 2rem;
+    color:var(--black);
+    background-color: var(--light-bg);
+    border-radius: .5rem;
+    height: 4.5rem;
+    width: 4.5rem;
+    line-height: 4.5rem;
+    cursor: pointer;
+    text-align: center;
+    margin-left: .7rem;
+}
+
+.header .flex .icons div:hover{
+    background-color: var(--black);
+    color:var(--white);
+}
+
+.header .flex .profile{
+    position: absolute;
+    top:120%; right: 2rem;
+    background-color: var(--white);
+    border-radius: .5rem;
+    padding: 1.5rem;
+    text-align: center;
+    overflow: hidden;
+    transform-origin: top right;
+    transform: scale(0);
+    transition: .2s linear;
+    width: 30rem;
+}
+
+.header .flex .profile.active{
+    transform: scale(1);
+}
+
+.header .flex .profile .image{
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.header .flex .profile .name{
+    font-size: 2rem;
+    color:var(--black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.header .flex .profile .role{
+    font-size: 1.8rem;
+    color: var(--light-color);
+}
+
+#search-btn{
+    display: none;
+}
+.side-bar{
+    position: fixed;
+    top: 0; left: 0;
+    width: 30rem;
+    background-color: var(--white);
+    height: 100vh;
+    border-right: var(--border);
+    z-index: 1200;
+}
+
+.side-bar #close-btn{
+    text-align: right;
+    padding: 2rem;
+    display: none;
+}
+
+.side-bar #close-btn i{
+    text-align: right;
+    font-size: 2.5rem;
+    background:var(--red);
+    border-radius: .5rem;
+    color:var(--white);
+    cursor: pointer;
+    height: 4.5rem;
+    width: 4.5rem;
+    line-height: 4.5rem;
+    text-align: center;
+}
+
+.side-bar #close-btn i:hover{
+    background-color: var(--black);
+}
+
+.side-bar .profile{
+    padding:3rem 2rem;
+    text-align: center;
+}
+
+.side-bar .profile .image{
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.side-bar .profile .name{
+    font-size: 2rem;
+    color:var(--black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.side-bar .profile .role{
+    font-size: 1.8rem;
+    color: var(--light-color);
+}
+
+.side-bar .navbar a{
+    display: block;
+    padding: 2rem;
+    font-size: 2rem;
+}
+
+.side-bar .navbar a i{
+    margin-right: 1.5rem;
+    color:var(--main-color);
+    transition: .2s linear;
+}
+
+.side-bar .navbar a span{
+    color:var(--light-color);
+}
+
+.side-bar .navbar a:hover{
+    background-color: var(--light-bg);
+}
+
+.side-bar .navbar a:hover i{
+    margin-right: 2.5rem;
+}
+
+.side-bar.active{
+    left: -30rem;
+}
+table {
+    font-size:10px;
+    margin:5px;
+    width: 90%;
+    background-color: white;
+    border-collapse: collapse;
+    white-space: pre-line;
+    color: var(--light-color);
+    background-color: var(--light-bg);
+}
+th, td {
+    border: 1px solid var(--table-cl);
+    padding: 1rem;
+    text-align: center;
+    color: var(--black);
+    background-color: var(--white);
+}
+th {
+    color: var(--black);
+    background-color: var(--white);
+}
+.schedule_time{
+    width:10%;
+}
+table.dark{
+
+}
+body.dark{
+    --light-color:#aaa;
+    --light-bg:#333;
+    --black:#fff;
+    --white:#222;
+    --table-cl:#333;
+    --border:.1rem solid rgba(255,255,255,.2);
+}
+
