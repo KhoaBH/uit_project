@@ -54,11 +54,14 @@
 
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "login_db");
+$conn = mysqli_connect("localhost", "root", "", "sdb_prod");
 if(isset($_POST['login_btn'])){
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $sql = "SELECT * FROM login_info WHERE name=?";
+//    $role = $_POST['role'];
+//    $date_of_birth=$_POST['date_of_birth'];
+//    $mail=$_POST['enmail'];
+    $sql = "SELECT * FROM user WHERE username=?";
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, 's', $username);
     mysqli_stmt_execute($stmt);
@@ -71,7 +74,14 @@ if(isset($_POST['login_btn'])){
         if($password === $resultPassword){
             $_SESSION['username']=$username;
             $_SESSION['password']=$password;
-            header('Location: main.php');
+            $_SESSION['role']=$row["role"];
+            $_SESSION['date_of_birth']=$row["date_of_birth"];
+            $_SESSION['mail']=$row["email"];
+            $_SESSION['phone']=$row["phone"];
+            $_SESSION['class_name']=$row["class_name"];
+            $_SESSION['gender']=$row["gender"];
+//            $_SESSION['role']=$password;
+            header('Location: profile.php');
             exit();
         } else {
             echo "<script>showUserWrongPassWord();</script>";

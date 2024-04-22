@@ -243,9 +243,9 @@ body{
     left: -30rem;
 }
 table {
-    font-size:10px;
+    font-size:15px;
     margin:5px;
-    width: 90%;
+    width: 100%;
     background-color: white;
     border-collapse: collapse;
     white-space: pre-line;
@@ -254,12 +254,12 @@ table {
 }
 th, td {
     border: 1px solid var(--table-cl);
-    padding: 1rem;
     text-align: center;
     color: var(--black);
     background-color: var(--white);
 }
 th {
+    padding: 2px;
     color: var(--black);
     background-color: var(--white);
 }
@@ -277,4 +277,173 @@ body.dark{
     --table-cl:#333;
     --border:.1rem solid rgba(255,255,255,.2);
 }
+@media (max-width:1200px){
 
+    body{
+        padding-left: 0;
+    }
+
+    .side-bar{
+        left: -30rem;
+        transition: .2s linear;
+    }
+
+    .side-bar #close-btn{
+        display: block;
+    }
+
+    .side-bar.active{
+        left: 0;
+        box-shadow: 0 0 0 100vw rgba(0,0,0,.8);
+        border-right: 0;
+    }
+
+}
+body.active{
+    padding-left: 0;
+}
+.schedule_content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 1.5rem 2rem;
+}
+.user-profile .info{
+    background-color: var(--white);
+    border-radius: .5rem;
+    padding: 2rem;
+}
+
+.user-profile .info .user{
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+}
+
+.user-profile .info .user img{
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.user-profile .info .user h3{
+    font-size: 2rem;
+    color: var(--black);
+}
+
+.user-profile .info .user p{
+    font-size: 1.7rem;
+    color: var(--light-color);
+    padding: .3rem 0;
+}
+
+.user-profile .info .box-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.user-profile .info .box-container .box{
+    background-color: var(--light-bg);
+    border-radius: .5rem;
+    padding: 1rem;
+    flex: 1 1 25rem;
+}
+
+.user-profile .info .box-container .box .flex{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.user-profile .info .box-container .box .flex i{
+    font-size:2rem;
+    color: var(--white);
+    background-color: var(--black);
+    text-align: center;
+    border-radius: .5rem;
+    height: 5rem;
+    width: 5rem;
+    line-height: 4.9rem;
+}
+
+.user-profile .info .box-container .box .flex span{
+    font-size: 2rem;
+    color: var(--main-color);
+}
+
+.user-profile .info .box-container .box .flex p{
+    color: var(--light-color);
+    font-size: 1.2rem;
+}
+h1.heading{
+    font-size: 2rem;
+    text-align: center;
+}
+.profile_wrapper {
+    margin:0px;
+    width: 700px;
+    height: auto;
+    background-color: #ffffff;
+    margin: 0 auto;
+    margin-top: 10px;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+}
+
+/* CSS */
+.schedule_create_btn {
+    appearance: none;
+    background-color: #2ea44f;
+    border: 1px solid rgba(27, 31, 35, .15);
+    border-radius: 6px;
+    box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 6px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+   align-self: flex-end;
+    height:45px;
+}
+.schedule_create_btn:focus:not(:focus-visible):not(.focus-visible) {
+    box-shadow: none;
+    outline: none;
+}
+
+.schedule_create_btn:hover {
+    background-color: #2c974b;
+}
+
+.schedule_create_btn:focus {
+    box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+    outline: none;
+}
+
+.schedule_create_btn:disabled {
+    background-color: #94d3a2;
+    border-color: rgba(27, 31, 35, .1);
+    color: rgba(255, 255, 255, .8);
+    cursor: default;
+}
+
+.schedule_create_btn:active {
+    background-color: #298e46;
+    box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+}
