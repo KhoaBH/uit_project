@@ -53,8 +53,8 @@
 
 
 <?php
+ include 'db_connect.php';
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "sdb_prod");
 if(isset($_POST['login_btn'])){
     $username = $_POST['username'];
     $password = $_POST['password'];

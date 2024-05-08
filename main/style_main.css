@@ -60,36 +60,40 @@ body{
     align-items: center;
     justify-content: space-between;
     position: relative;
-    padding: 1.5rem 2rem;
+    padding: 0.2rem 1rem;
 }
 
 .header .flex .logo{
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: var(--black);
 }
 
 .header .flex .search-form{
     width: 50rem;
+    height:4rem;
     border-radius: .5rem;
     background-color: var(--table-cl);
-    padding:1.5rem 2rem;
+    padding:1.5rem 1.5rem;
     display: flex;
     gap:2rem;
+    justify-content: center;
 
 }
 
 .header .flex .search-form input{
     width: 100%;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color:var(--black);
     background:none;
 }
 
 .header .flex .search-form button{
     background:none;
-    font-size: 2rem;
+    font-size: 1.5rem;
     cursor: pointer;
     color:var(--black);
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .header .flex .search-form button:hover{
@@ -149,7 +153,7 @@ body{
 }
 
 .header .flex .profile .role{
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: var(--light-color);
 }
 
@@ -307,7 +311,8 @@ body.active{
     align-items: center;
     justify-content: space-between;
     position: relative;
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 1rem;
+    padding-bottom:1px;
 }
 .user-profile .info{
     background-color: var(--white);
@@ -419,8 +424,9 @@ h1.heading{
     touch-action: manipulation;
     vertical-align: middle;
     white-space: nowrap;
-   align-self: flex-end;
+    align-self: flex-end;
     height:45px;
+    margin-right:68px
 }
 .schedule_create_btn:focus:not(:focus-visible):not(.focus-visible) {
     box-shadow: none;
@@ -447,3 +453,165 @@ h1.heading{
     background-color: #298e46;
     box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
 }
+.schedule_form{
+    position: absolute;
+    top:-150%;
+    left:50%;
+    opacity: 0;
+    transform: translate(-50%,-50%) scale(1.25);
+    width:1000px;
+    height:650px;
+    padding: 10px 20px;
+    background:transparent;
+    box-shadow:2px 2px 5px 5px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    z-index: 2000;
+    transition: top 0ms ease-in-out 200ms,
+                opacity 200ms ease-in-out 0ms,
+                transform 200ms ease-in-out 0ms;
+}
+.schedule_form.active{
+    top:50%;
+    opacity: 1;
+    transform: translate(-50%,-50%) scale(1);
+    transition: top 0ms ease-in-out 0ms,
+    opacity 200ms ease-in-out 0ms,
+    transform 200ms ease-in-out 0ms;
+    background-color: var(--white);
+}
+.container.active{
+    backdrop-filter: blur(5px);
+}
+.header.blur{
+    filter: blur(5px);
+    pointer-events: none;
+}
+.side-bar.blur{
+    filter: blur(5px);
+    pointer-events: none;
+}
+.schedule_content.blur{
+    filter: blur(5px);
+    pointer-events: none;
+}
+/* cancle button */
+.schedule_form .fa-times{
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: transparent;
+    font-size: 18px;
+    border-radius: 100%;
+    text-align: center;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    margin: 10px;
+    color: var(--black);
+}
+.fa-times:hover{
+    font-size: 22px;
+}
+/* design the form */
+.form_container{
+    background: var(--white);
+    padding: 30px;
+    padding-top: 0px;
+    margin-top: 0px;
+    border-radius: 3px;
+    color:var(--black);
+}
+.form_container .form_item{
+    margin-bottom: 25px;
+}
+/*.form_container input[type=text] {*/
+/*    width: 10%;*/
+/*    padding: 12px 20px;*/
+/*    margin: 8px 0;*/
+/*    box-sizing: border-box;*/
+/*    border: none;*/
+/*    background-color: #3CBC8D;*/
+/*    color: white;*/
+/*}*/
+.form_container .form_wrap.form_grp{
+    display: flex;
+}
+.form_container .form_wrap.form_grp .form_item{
+    width: 50%;
+}
+.form_container .form_wrap.form_grp .form_item:first-child{
+    margin-right: 4%;
+}
+.form_container .form_item label{
+    display: block;
+    margin-bottom: 5px;
+    color:var(--black);
+    font-size:15px;
+}
+/* input box and select box */
+.form_container .form_item input,
+.form_container .form_item select{
+    width: 100%;
+    border: 1px solid var(--table-cl);
+    border-radius: 3px;
+    padding: 10px;
+    font-size: 100%;
+}
+/* submit button */
+.form_container .submit_btn input[type="submit"]{
+    background: var(--main-color);
+    cursor: pointer;
+    color: var(--white);
+    border: 1px solid var(--main-color);
+    padding: 10px;
+    width: 100%;
+    border-radius: 3px;
+    font-size: 150%;
+}
+.schedule_form .test {
+    display: block; /* Đảm bảo mỗi nhãn được hiển thị trên một dòng riêng biệt */
+    text-align: center; /* Căn giữa nội dung của nhãn */
+    margin-bottom: 5px; /* Khoảng cách phía dưới giữa các nhãn */
+    font-size:30px;
+    color:var(--black);
+}
+.schedule_form textarea {
+    width: 100%;
+    border: 1px solid var(--table-cl);
+    border-radius: 3px;
+    padding: 10px;
+    font-size: 16px;
+}
+.fc-time-grid .fc-slats td {
+    height: 80px;
+    border-bottom: 0;
+}
+.fc-time-grid .fc-slats tr[data-time="12:00:00"],
+.fc-time-grid .fc-slats tr[data-time="12:45:00"] {
+    display: none;
+}
+.fc-body .fc-time-grid tbody tr:last-child::after {
+    content: "";
+    display: none;
+}
+.fc-event .fc-bg {
+    cursor: pointer;
+}
+/*.fc-event {*/
+/*    border-radius: 10px;*/
+/*    padding: 10px;*/
+/*    margin: 5px;*/
+/*}*/
+#calendar{
+    width: 900px;
+    height:510px;
+}
+.fc-scrollgrid tbody tr {
+    height: 60px; /* Đặt chiều cao của hàng */
+}
+/* Ẩn các ô trong bảng có dữ liệu thời gian là "12:00:00" và nằm trong các hàng có lớp .fc-timegrid-slots */
+tr.fc-timegrid-slots td[data-time="12:00:00"] {
+    display: none;
+}
+
