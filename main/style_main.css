@@ -45,7 +45,7 @@ html::-webkit-scrollbar-thumb{
 
 body{
     background-color: var(--light-bg);
-    padding-left: 30rem;
+    padding-left: 25rem;
 }
 .header{
     position: sticky;
@@ -163,7 +163,7 @@ body{
 .side-bar{
     position: fixed;
     top: 0; left: 0;
-    width: 30rem;
+    width: 25rem;
     background-color: var(--white);
     height: 100vh;
     border-right: var(--border);
@@ -311,7 +311,7 @@ body.active{
     align-items: center;
     justify-content: space-between;
     position: relative;
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.5rem;
     padding-bottom:1px;
 }
 .user-profile .info{
@@ -415,7 +415,7 @@ h1.heading{
     font-size: 14px;
     font-weight: 600;
     line-height: 20px;
-    padding: 6px 16px;
+    /*padding: 6px 16px;*/
     position: relative;
     text-align: center;
     text-decoration: none;
@@ -425,8 +425,10 @@ h1.heading{
     vertical-align: middle;
     white-space: nowrap;
     align-self: flex-end;
-    height:45px;
-    margin-right:68px
+    height:60px;
+    width:220px;
+    /*margin-right:68px;*/
+    margin-top:10px;
 }
 .schedule_create_btn:focus:not(:focus-visible):not(.focus-visible) {
     box-shadow: none;
@@ -453,8 +455,10 @@ h1.heading{
     background-color: #298e46;
     box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
 }
-.schedule_form{
+.schedule_form, .schedule_form_detail{
+    box-sizing: border-box;
     position: absolute;
+    overflow: auto;
     top:-150%;
     left:50%;
     opacity: 0;
@@ -471,6 +475,15 @@ h1.heading{
                 transform 200ms ease-in-out 0ms;
 }
 .schedule_form.active{
+    top:50%;
+    opacity: 1;
+    transform: translate(-50%,-50%) scale(1);
+    transition: top 0ms ease-in-out 0ms,
+    opacity 200ms ease-in-out 0ms,
+    transform 200ms ease-in-out 0ms;
+    background-color: var(--white);
+}
+.schedule_form_detail.active{
     top:50%;
     opacity: 1;
     transform: translate(-50%,-50%) scale(1);
@@ -496,6 +509,21 @@ h1.heading{
 }
 /* cancle button */
 .schedule_form .fa-times{
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: transparent;
+    font-size: 18px;
+    border-radius: 100%;
+    text-align: center;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    margin: 10px;
+    color: var(--black);
+}
+.schedule_form_detail .fa-times{
     position: fixed;
     top: 0;
     right: 0;
@@ -576,6 +604,13 @@ h1.heading{
     font-size:30px;
     color:var(--black);
 }
+.schedule_form_detail .test {
+    display: block; /* Đảm bảo mỗi nhãn được hiển thị trên một dòng riêng biệt */
+    text-align: center; /* Căn giữa nội dung của nhãn */
+    margin-bottom: 5px; /* Khoảng cách phía dưới giữa các nhãn */
+    font-size:30px;
+    color:var(--black);
+}
 .schedule_form textarea {
     width: 100%;
     border: 1px solid var(--table-cl);
@@ -604,14 +639,56 @@ h1.heading{
 /*    margin: 5px;*/
 /*}*/
 #calendar{
-    width: 900px;
-    height:510px;
+    width: 1200px;
+    height:580px;
 }
 .fc-scrollgrid tbody tr {
     height: 60px; /* Đặt chiều cao của hàng */
 }
-/* Ẩn các ô trong bảng có dữ liệu thời gian là "12:00:00" và nằm trong các hàng có lớp .fc-timegrid-slots */
-tr.fc-timegrid-slots td[data-time="12:00:00"] {
-    display: none;
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 1rem;
 }
-
+.event-time{
+    font-size:14px;
+}
+.event-title{
+    white-space: nowrap; /* Ngăn tiêu đề sự kiện xuống dòng */
+    overflow: hidden; /* Ẩn phần vượt quá */
+    text-overflow: ellipsis; /* Thêm dấu ba chấm (...) cho phần vượt quá */
+    font-size: 14px;
+}
+td.fc-more-cell {
+    text-align: center;
+    font-size: 2.3em;
+    vertical-align: middle
+}
+.fc-timegrid-event .fc-event-main {
+    padding: 0px 15px 0px;
+    text-align: left;
+    display: flex; /* Sử dụng flexbox */
+    flex-direction: column; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang và dọc */
+}
+.detail_buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap:30px;
+}
+.btn-danger{
+    width:20rem;
+    height: 5rem;
+    font-size:2rem;
+}
+.btn-success{
+    width:20rem;
+    font-size:2rem;
+}
+#class_dropdown{
+    align-self: self-start;
+    height:30px;
+    width:145px;
+    font-size:18px;
+    order: -1;
+    border-radius: 5px;
+}

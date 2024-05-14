@@ -63,6 +63,7 @@ window.onscroll = () =>{
     }
 }
 let schedule_form = document.querySelector('.schedule_form');
+let schedule_form_detail = document.querySelector('.schedule_form_detail');
 let container = document.querySelector('.container');
 let schedule = document.querySelector('.schedule_content');
 let header = document.querySelector('.header');
@@ -71,14 +72,51 @@ document.querySelector('#openPageBtn').onclick = () =>{
     schedule.classList.toggle('blur');
     sideBar.classList.toggle('blur');
     header.classList.toggle('blur');
-    container.classList.toggle('active');
+    // container.classList.toggle('active');
 }
 document.querySelector('#close_btn').onclick = () => {
     schedule_form.classList.toggle('active');
     schedule.classList.toggle('blur');
     sideBar.classList.toggle('blur');
     header.classList.toggle('blur');
-    container.classList.toggle('active');
+    // container.classList.toggle('active');
+}
+document.querySelector('#close_btn_detail').onclick = () => {
+    schedule_form_detail.classList.toggle('active');
+    schedule.classList.toggle('blur');
+    sideBar.classList.toggle('blur');
+    header.classList.toggle('blur');
+    // container.classList.toggle('active');
+}
+function showSchedule(data){
+    var start_time_object = document.getElementById('start_time_detail');
+    var end_time_object = document.getElementById('end_time_detail');
+    var subject_object = document.getElementById('subject_detail');
+    var schedule_id_object = document.getElementById('schedule_id_detail');
+    var subject_content = document.getElementById('subject_content_detail');
+    var schedule_id = document.getElementById('schedule_id');
+    var date_object = document.getElementById('date_detail');
+    //
+    var start = data.event._def.extendedProps.start_time;
+    var start_val = start.split(" ")[1];
+    var end = data.event._def.extendedProps.end_time;
+    var end_val = end.split(" ")[1];
+    var date = start.split(" ");
+    date = date[0];
+// Đặt giá trị cho select
+    subject_content.value = data.event._def.extendedProps.description; // Giá trị muốn đặt
+    start_time_object.value = start_val;
+    end_time_object.value = end_val;
+    subject_object.value = data.event._def.extendedProps.subject_name;
+    schedule_id.value = data.event._def.extendedProps.schedule_id;
+    date_object.value = date;
+
+    //render form
+    schedule_form_detail.classList.toggle('active');
+    schedule.classList.toggle('blur');
+    sideBar.classList.toggle('blur');
+    header.classList.toggle('blur');
+    // container.classList.toggle('active');
 }
 // Lấy form theo ID
 // var form = document.querySelector('#schedule_form form');
@@ -115,7 +153,6 @@ document.querySelector('#close_btn').onclick = () => {
 document.querySelector('.submit_btn input[type="submit"]').addEventListener('click', function(event) {
     // Ngăn chặn hành động mặc định của nút submit
     event.preventDefault();
-
     // Lấy giá trị từ các trường nhập và gán vào các biến
     var startTime = $('#start_time').val();
     var endTime = $('#end_time').val();
@@ -123,27 +160,90 @@ document.querySelector('.submit_btn input[type="submit"]').addEventListener('cli
     var date = $('#date').val();
     var subjectContent = $('#subject_content').val();
     var documentInput = $('#document').val();
+    var class_id = document.getElementById('class_id').value;
 
     // Tạo một đối tượng hoặc cấu trúc dữ liệu để lưu trữ thông tin
-    var formData = {
+    var data = {
         startTime: startTime,
         endTime: endTime,
         subject: subject,
         date: date,
         subjectContent: subjectContent,
-        documentInput: documentInput
+        documentInput: documentInput,
+        class_id:class_id
     };
-
-    console.log(formData);
-
+    console.log(data);
     $.ajax({
         url: 'ajax_action.php',
         method: "POST",
-        data: { formData: formData },
+        data: {
+            type: "saveSchedule",
+            data: data
+        },
         success: function(data) {
             location.reload();
         }
     });
 });
+// Hàm để định dạng thời gian theo định dạng HH:mm (24 giờ)
+function formatDate(date) {
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+document.getElementById("save_button_detail").addEventListener("click", function() {
+    // Đây là nơi bạn đặt mã xử lý cho sự kiện khi button "Lưu" được click
+    var startTime = $('#start_time_detail').val();
+    var endTime = $('#end_time_detail').val();
+    var subject = $('#subject_detail').val();
+    var date = $('#date_detail').val();
+    var subjectContent = $('#subject_content_detail').val();
+    var documentInput = $('#document_detail').val();
+    var schedule_id = $('#schedule_id').val();
+    var class_id = $('#class_id').val();
+    // Thêm các hành động xử lý khác tại đây
+    var data = {
+        startTime: startTime,
+        endTime: endTime,
+        subject: subject,
+        date: date,
+        subjectContent: subjectContent,
+        documentInput: documentInput,
+        schedule_id: schedule_id,
+
+    };
+    console.log(data);
+    $.ajax({
+        url: 'ajax_action.php',
+        method: "POST",
+        data: {
+            type: "editSchedule",
+            data: data
+        },
+        success: function(data) {
+            location.reload();
+        }
+    });
+});
+document.getElementById("delete_button_detail").addEventListener("click", function() {
+    var schedule_id = $('#schedule_id').val();
+    // Thêm các hành động xử lý khác tại đây
+    var data = {
+        schedule_id: schedule_id,
+    };
+    console.log(data);
+    $.ajax({
+        url: 'ajax_action.php',
+        method: "POST",
+        data: {
+            type: "deleteSchedule",
+            data: data
+        },
+        success: function(data) {
+            location.reload();
+        }
+    });
+});
+
+
+
 
 

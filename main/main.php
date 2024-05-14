@@ -1,19 +1,31 @@
 <?php
 // Kiểm tra kết nối đã được thiết lập hay chưa
 include 'db_connect.php';
+global $conn;
 session_start();
 if(isset($_SESSION["username"])&&($_SESSION["username"]!="")){
     $user=$_SESSION["username"];
     $mail=$_SESSION["mail"];
     $phone=$_SESSION["phone"];
     $role=$_SESSION["role"];
+    $class_id=$_SESSION["class_id"];
     $date_of_birth=$_SESSION["date_of_birth"];
 }
 if(isset($_SESSION['password'])&&($_SESSION['password']!="")){
     $pass=$_SESSION['password'];
 }
-$fetch_event = mysqli_query($conn, "select * from schedule");
+
+// Định nghĩa hàm myFunction()
+function myFunction($class_id) {
+    $tmp= $class_id;
+    return $tmp;
+}
+$fetch_event = mysqli_query($conn, "select * from schedule where class_id is null");
+$subject_list = mysqli_query($conn, "select * from subject");
+$subject_list_detail = mysqli_query($conn, "select * from subject");
+$class_list = mysqli_query($conn, "select * from class");
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +34,9 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lí sổ đầu bài</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script src="js/daypilot/daypilot-all.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--    <script src="js/daypilot/daypilot-all.min.js" type="text/javascript"></script>-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> <!--Thêm thư viện Moment.js-->
@@ -37,7 +49,6 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
 
     <header class="header">
         <section class="flex">
-
             <a href="home.html" class="logo">MDC Education</a>
 
             <form action="search.html" method="post" class="search-form">
@@ -81,11 +92,22 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
             <a href="profile.php"><i class="fas fa-user"></i><span>Thông tin cá nhân</span></a>
             <a href="courses.html"><i class="fas fa-graduation-cap"></i><span>Thống kê</span></a>
             <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>Giáo viên</span></a>
-            <a href="index.php"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
+            <a href="log_out.php"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
         </nav>
     </div>
     <div class="schedule_content" style="display: flex; flex-direction: column; width:100%;">
-        <div id="calendar"></div>
+
+        <div id="calendar">
+            <select id="class_dropdown" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                <?php
+                // $subject_list là kết quả của truy vấn SQL để lấy danh sách môn học từ cơ sở dữ liệu
+                while ($result = mysqli_fetch_array($class_list )) {
+                    echo "<option value='" . $result['id'] . "'>" . $result['class_name'] . "</option>";
+                }
+                ?>
+            </select>
+            <button class="schedule_create_btn" id="openPageBtn">Tạo lịch sổ đầu bài</button>
+        </div>
 <!--        <select id="week_select">-->
 <!--            <option value="1">Tuần 1</option>-->
 <!--            <option value="2">Tuần 2</option>-->
@@ -183,9 +205,8 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
 <!--                <td></td>-->
 <!--                <td></td>-->
 <!--            </tr>-->
+<!--        </table>-->
 
-        </table>
-        <button class="schedule_create_btn" id="openPageBtn">Tạo lịch sổ đầu bài</button>
     </div>
 <!--    Schedule_form-->
     <div class="schedule_form" id="schedule_form">
@@ -193,6 +214,9 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
         <div method="POST" class="form_container">
             <form name="schedule_form">
                 <label class="test">Lên lịch giảng dạy</label>
+                <div>
+                    <input class="class_id" id="class_id" style="display:none" type="text" value="<?php echo json_encode($_SESSION["class_id"]); ?>"></input>
+                </div>
                 <div class="form_wrap form_grp">
                     <div class="form_item">
                         <div class="form_item">
@@ -202,13 +226,13 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
                                 <option value="07:30:00">Tiết 1</option>
                                 <option value="08:15:00">Tiết 2</option>
                                 <option value="09:00:00">Tiết 3</option>
-                                <option value="09:45:00">Tiết 4</option>
-                                <option value="09:30:00">Tiết 5</option>
-                                <option value="10:15:00">Tiết 6</option>
+                                <option value="10:30:00">Tiết 4</option>
+                                <option value="09:45:00">Tiết 5</option>
+                                <option value="12:45:00">Tiết 6</option>
                                 <option value="13:30:00">Tiết 7</option>
                                 <option value="14:15:00">Tiết 8</option>
-                                <option value="9">Tiết 9</option>
-                                <option value="10">Tiết 10</option>
+                                <option value="15:00:00">Tiết 9</option>
+                                <option value="15:45:00">Tiết 10</option>
                             </select>
                         </div>
                     </div>
@@ -217,22 +241,22 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
                             <label>Tiết kết thúc</label>
                             <select name="end_time" id="end_time">
                                 <option value="-none-">-none-</option>
-                                <option value="14:00:00">Tiết 1</option>
-                                <option value="2">Tiết 2</option>
-                                <option value="3">Tiết 3</option>
-                                <option value="4">Tiết 4</option>
-                                <option value="5">Tiết 5</option>
-                                <option value="6">Tiết 6</option>
-                                <option value="7">Tiết 7</option>
-                                <option value="8">Tiết 8</option>
-                                <option value="9">Tiết 9</option>
-                                <option value="10">Tiết 10</option>
+                                <option value="08:15:00">Tiết 1</option>
+                                <option value="09:00:00">Tiết 2</option>
+                                <option value="10:30:00">Tiết 3</option>
+                                <option value="09:45:00">Tiết 4</option>
+                                <option value="12:45:00">Tiết 5</option>
+                                <option value="13:30:00">Tiết 6</option>
+                                <option value="14:15:00">Tiết 7</option>
+                                <option value="15:00:00">Tiết 8</option>
+                                <option value="15:45:00">Tiết 9</option>
+                                <option value="04:30:00">Tiết 10</option>
                             </select>
                         </div>
                     </div>
                     <div class="form_item">
                         <div class="form_item">
-                            <label>Tiết kết thúc</label>
+                            <label>Ngày</label>
                             <input name="date" id="date" type="date" value="<?php echo date("Y-m-d"); ?>">
                         </div>
                     </div>
@@ -241,14 +265,12 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
                     <div class="form_item">
                         <label>Môn học</label>
                         <select name="subject" id="subject">
-                            <option>Toán</option>
-                            <option>Vật lý</option>
-                            <option>Hóa học</option>
-                            <option>Sinh</option>
-                            <option>Thể dục</option>
-                            <option>Giáo dục công dân</option>
-                            <option>Ngữ văn</option>
-                            <option>Tiếng anh</option>
+                            <?php
+                            // $subject_list là kết quả của truy vấn SQL để lấy danh sách môn học từ cơ sở dữ liệu
+                            while ($result = mysqli_fetch_array($subject_list)) {
+                                echo "<option>" . $result['subject_name'] . "</option>";
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -276,85 +298,215 @@ $fetch_event = mysqli_query($conn, "select * from schedule");
             </form>
         </div>
     </div>
+    <div class="schedule_form_detail" id="schedule_form_detail">
+        <div class="fas fa-times" id="close_btn_detail"></div>
+        <div method="POST" class="form_container">
+            <form name="schedule_form_detail">
+                <label class="test">Thông tin lịch giảng dạy</label>
+                <div class="form_wrap form_grp">
+                    <div>
+                        <input class="schedule_id" id="schedule_id" style="display:none" type="text"></input>
+                    </div>
+                    <div>
+                        <input class="schedule_id" id="schedule_id" style="display:none" type="text"></input>
+                    </div>
+                    <div class="form_item">
+                        <div class="form_item">
+                            <label>Tiết bắt đầu</label>
+                            <select name="start_time_detail" id="start_time_detail">
+                                <option value="-none-">-none-</option>
+                                <option value="07:30:00">Tiết 1</option>
+                                <option value="08:15:00">Tiết 2</option>
+                                <option value="09:00:00">Tiết 3</option>
+                                <option value="10:30:00">Tiết 4</option>
+                                <option value="09:45:00">Tiết 5</option>
+                                <option value="12:45:00">Tiết 6</option>
+                                <option value="13:30:00">Tiết 7</option>
+                                <option value="14:15:00">Tiết 8</option>
+                                <option value="15:00:00">Tiết 9</option>
+                                <option value="15:45:00">Tiết 10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_item">
+                        <div class="form_item">
+                            <label>Tiết kết thúc</label>
+                            <select name="end_time_detail" id="end_time_detail">
+                                <option value="-none-">-none-</option>
+                                <option value="08:15:00">Tiết 1</option>
+                                <option value="09:00:00">Tiết 2</option>
+                                <option value="10:30:00">Tiết 3</option>
+                                <option value="09:45:00">Tiết 4</option>
+                                <option value="12:45:00">Tiết 5</option>
+                                <option value="13:30:00">Tiết 6</option>
+                                <option value="14:15:00">Tiết 7</option>
+                                <option value="15:00:00">Tiết 8</option>
+                                <option value="15:45:00">Tiết 9</option>
+                                <option value="04:30:00">Tiết 10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_item">
+                        <div class="form_item">
+                            <label>Ngày</label>
+                            <input name="date_detail" id="date_detail" type="date" value="<?php echo date("Y-m-d"); ?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="form_wrap">
+                    <div class="form_item">
+                        <label>Môn học</label>
+                        <select name="subject_detail" id="subject_detail">
+                            <?php
+                            // $subject_list là kết quả của truy vấn SQL để lấy danh sách môn học từ cơ sở dữ liệu
+                            while ($result = mysqli_fetch_array($subject_list_detail)) {
+                                echo "<option>" . $result['subject_name'] . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form_item">
+                    <label>Nội dung môn học</label>
+                    <input class="subject_content_detail" id="subject_content_detail" type="text">
+                </div>
+                <div class="form_item">
+                    <label>Tài liệu</label>
+                    <input class="document_detail" id="document_detail" type="text">
+
+                </div>
+                <div class="form_wrap">
+                    <div class="form_item">
+                        <label>Tình trạng tiết học</label>
+                        <select id="status" name="status" disabled>
+                            <option>Chưa bắt đầu</option>
+                            <option>Đã hoàn thành</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="detail_buttons">
+                    <button type="button" class="btn btn-success" id="save_button_detail">Lưu</button>
+                    <button type="button" class="btn btn-danger" id="delete_button_detail">Xóa</button>
+                </div>
+            </form>
+        </div>
+    </div>
 <!-- custom js file link  -->
     <script src="js/script.js"></script>
     <script>
-        // Thêm sự kiện "change" cho dropdown chọn tuần
-        document.getElementById("week_select").addEventListener("change", function() {
-            var selectedWeek = parseInt(this.value); // Lấy giá trị tuần được chọn
-            updateSchedule(selectedWeek); // Cập nhật nội dung của bảng dựa trên tuần được chọn
-        });
-
-        // Hàm tính toán và cập nhật tuần hiện tại (ví dụ: mỗi giây)
+        renderCalendar();
         function updateCurrentWeek() {
             var currentWeek = calculateCurrentWeek(); // Tính toán tuần hiện tại
             document.getElementById("week_select").value = currentWeek; // Cập nhật dropdown với tuần hiện tại
             updateSchedule(currentWeek); // Cập nhật nội dung của bảng dựa trên tuần hiện tại
         }
-        // Gọi hàm updateCurrentWeek mỗi giây
-        setInterval(updateCurrentWeek, 1000); // Mỗi giây
-        // Hàm xử lý sự kiện khi nút submit được nhấn
-
-    </script>
-    <script>
-
-        document.addEventListener('DOMContentLoaded', function(){
-            const calendarEl = document.getElementById('calendar')
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                select: function(start, end) {
-                    $('#myModal').modal('show');
-                    // Lưu thời gian bắt đầu và kết thúc khi chọn trên lịch
-                    $("#eventStart").val(start.format());
-                    $("#eventEnd").val(end.format());
-                },
-
-                initialView: 'timeGridWeek', // Thay đổi chế độ xem thành tuần
-                header: {
-                    left: 'month, agendaWeek, agendaDay, list',
-                    center: 'title',
-                    right: 'prev, today, next'
-                },
-
-                eventClick: function(info) {
-                    alert('Event: ' + info.description);
-                    $(this).css('border-color', 'red');
-                },
-                aspectRatio: 2,
-                timeZone: 'UTC',
-                columnHeaderFormat: 'dddd', // Hiển thị tên của các ngày trong tuần
-                allDaySlot: false,
-                selectable: true,
-                // selectMirror: true,
-                columnFormat: 'ddd DD/MM',
-                slotMinTime: '07:30:00',
-                slotMaxTime: '16:30:00',
-                defaultTimedEventDuration: '00:45:00',
-                slotDuration: '00:45:00',
-                slotLabelInterval: '00:45:00',
-                editable: true,
-                events:[
-                    <?php
-                    while($result = mysqli_fetch_array($fetch_event))
-                    { ?>
-                    {
-                        title: '<?php echo $result['schedule_id']; ?>',
-                        description: 'test',
-                        start: '<?php echo $result['start_time']; ?>',
-                        end: '<?php echo $result['end_time']; ?>',
-                        color: '#f16621',
-                        textColor: 'black'
-                    },
-                    <?php } ?>
-                ],
-
-
-            });
-            calendar.setOption('slotLabelFormat', function (data) {
-                return moment(data.date).format("HH:mm") + " - " + moment(data.date).add(45, 'minutes').format("HH:mm");
-            });
-            calendar.render();
+        $(document).ready(function() {
+            var classId = <?php echo json_encode($_SESSION["class_id"]); ?>; // Lấy giá trị từ PHP và chuyển đổi thành JavaScript
+            var classList = document.getElementById('class_dropdown');
+            classList.value = classId; // Thiết lập giá trị mặc định cho hộp chọn
         });
+        function renderCalendar() {
+            document.addEventListener('DOMContentLoaded', function(){
+                const calendarEl = document.getElementById('calendar');
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    select: function(start, end) {
+                        $(modal_id).modal('show');
+                        // Lưu thời gian bắt đầu và kết thúc khi chọn trên lịch
+                        $("#eventStart").val(start.format());
+                        $("#eventEnd").val(end.format());
+                    },
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        right: 'title',
+                    },
+                    initialView: 'timeGridWeek', // Thay đổi chế độ xem thành tuần
+                    eventClick: function(info) {
+                        showSchedule(info);
+                    },
+                    aspectRatio: 2,
+                    timeZone: 'UTC',
+                    hiddenDays: [0],
+                    allDaySlot: false,
+                    selectable: true,
+                    // selectMirror: true,
+                    slotMinTime: '07:30:00',
+                    slotMaxTime: '16:30:00',
+                    defaultTimedEventDuration: '00:45:00',
+                    slotDuration: '00:45:00',
+                    slotLabelInterval: '00:45:00',
+                    editable: false,
+                    eventContent: function(arg) {
+                        // Tạo chuỗi nội dung sự kiện với tiêu đề và thời gian
+                        var eventContent = '<div class="event-content">' +
+                            '<div class="event-title">' + arg.event.title + '</div>' +
+                            '<div class="event-time">' +
+                            '<i class="fa fa-clock"></i> ' + arg.timeText +
+                            '</div>' +
+                            '</div>';
 
+                        // Trả về HTML cho sự kiện
+                        return {
+                            html: eventContent
+                        };
+                    },
+                    eventOverlap: false,
+                    events:[
+                        <?php
+                        $id = myFunction($_SESSION["class_id"]);
+                        $fetch_event = mysqli_query($conn, "select * from schedule where class_id='$id'");
+                        while($result = mysqli_fetch_array($fetch_event))
+                        { ?>
+                        {
+                            title: '<?php echo '<i class="fa fa-book"></i> ' . $result['subject_name'] . '<br>' .'<i class="fa fa-info-circle"></i> '. $result['description']; ?>',
+                            start: '<?php echo $result['start_time']; ?>',
+                            end: '<?php echo $result['end_time']; ?>',
+                            extendedProps: {
+                                subject_name: '<?php echo $result['subject_name']; ?>',
+                                start_time: '<?php echo $result['start_time']; ?>',
+                                end_time: '<?php echo $result['end_time']; ?>',
+                                description: '<?php echo $result['description']; ?>',
+                                schedule_id: '<?php echo $result['schedule_id']; ?>',
+                            },
+                            color: '#0096FF',
+                            textColor: 'white'
+                        },
+                        <?php } ?>
+
+                    ],
+                });
+                calendar.setOption('slotLabelFormat', function (data) {
+                    return moment(data.date).format("HH:mm") + " - " + moment(data.date).add(45, 'minutes').format("HH:mm");
+                });
+                calendar.render();
+                document.getElementById("class_dropdown").addEventListener("change", function() {
+                    // Lấy giá trị hiện tại của dropdown khi có sự thay đổi
+                    var selectedValue = this.value;
+
+                    // In ra giá trị đã chọn để kiểm tra
+
+                    console.log(selectedValue);
+                    $.ajax({
+                        url: 'set_session.php',
+                        method: "POST",
+                        data: {
+                            data: selectedValue,
+                        },
+                        success: function(data) {
+                            location.reload();
+                            // renderCalendar();
+                            // calendar.refetchEvents();
+                        }
+                    });
+                });
+            });
+        }
+
+        // if (document.getElementById('calendar')) {
+        //     renderCalendar();
+        // }
+        // document.getElementById("openPageBtn").addEventListener("click", function() {
+        //     renderCalendar();
+        // }
     </script>
 </body>
 </html>
