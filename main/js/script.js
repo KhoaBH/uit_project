@@ -96,20 +96,38 @@ function showSchedule(data){
     var subject_content = document.getElementById('subject_content_detail');
     var schedule_id = document.getElementById('schedule_id');
     var date_object = document.getElementById('date_detail');
-    //
+    var attendance_object = document.getElementById('attendance_select');
+    var main_teacher_object = document.getElementById('main_teacher_detail');
+    var status_object = document.getElementById('status_detail');
+    var save_button = document.getElementById('save_button_detail');
+    var jsonString = data.event._def.extendedProps.attendance_list.replace(/^"|"$/g, '').replace(/\\"/g, '"');
+    var jsonArray = JSON.parse(jsonString);
+
+    $("#attendance_select").multipleSelect("setSelects", jsonArray);
+
     var start = data.event._def.extendedProps.start_time;
     var start_val = start.split(" ")[1];
     var end = data.event._def.extendedProps.end_time;
+    // var att = data.event._def.extendedProps.attendance_list;
     var end_val = end.split(" ")[1];
     var date = start.split(" ");
     date = date[0];
 // Đặt giá trị cho select
+    main_teacher_object.innerHTML = data.event._def.extendedProps.main_teacher;
     subject_content.value = data.event._def.extendedProps.description; // Giá trị muốn đặt
     start_time_object.value = start_val;
     end_time_object.value = end_val;
     subject_object.value = data.event._def.extendedProps.subject_name;
     schedule_id.value = data.event._def.extendedProps.schedule_id;
     date_object.value = date;
+    if(data.event._def.extendedProps.status == 1){
+        status_object.value = "Đã hoàn thành";
+        save_button.disabled = true;
+    }
+    else{
+        status_object.value = "Chưa hoàn thành";
+        save_button.disabled = false;
+    }
 
     //render form
     schedule_form_detail.classList.toggle('active');
@@ -161,6 +179,14 @@ document.querySelector('.submit_btn input[type="submit"]').addEventListener('cli
     var subjectContent = $('#subject_content').val();
     var documentInput = $('#document').val();
     var class_id = document.getElementById('class_id').value;
+    var substitute = $('#substitute_checkbox').prop('checked');
+    var substitute_teacher= $('#substitute_teacher').val();
+    if(substitute === true){
+        substitute=1;
+    }
+    else {
+        substitute=0;
+    }
 
     // Tạo một đối tượng hoặc cấu trúc dữ liệu để lưu trữ thông tin
     var data = {
@@ -170,7 +196,10 @@ document.querySelector('.submit_btn input[type="submit"]').addEventListener('cli
         date: date,
         subjectContent: subjectContent,
         documentInput: documentInput,
-        class_id:class_id
+        class_id:class_id,
+        substitute:substitute,
+        substitute_teacher:substitute_teacher,
+
     };
     console.log(data);
     $.ajax({
@@ -199,6 +228,7 @@ document.getElementById("save_button_detail").addEventListener("click", function
     var documentInput = $('#document_detail').val();
     var schedule_id = $('#schedule_id').val();
     var class_id = $('#class_id').val();
+    var attendance= $('#attendance_select').val();
     // Thêm các hành động xử lý khác tại đây
     var data = {
         startTime: startTime,
@@ -208,6 +238,7 @@ document.getElementById("save_button_detail").addEventListener("click", function
         subjectContent: subjectContent,
         documentInput: documentInput,
         schedule_id: schedule_id,
+        attendance: attendance,
 
     };
     console.log(data);
@@ -241,6 +272,18 @@ document.getElementById("delete_button_detail").addEventListener("click", functi
             location.reload();
         }
     });
+});
+document.getElementById('substitute_checkbox').addEventListener('click', function() {
+    var select = document.getElementById('substitute_teacher');
+    // Nếu checkbox được chọn
+    if (this.checked) {
+        select.disabled = false; // Enable select
+    } else {
+        select.disabled = true; // Disable select
+    }
+});
+$("#attendance_select").multipleSelect({
+    filter: true
 });
 
 

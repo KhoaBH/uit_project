@@ -61,7 +61,7 @@ if(isset($_POST['login_btn'])){
 //    $role = $_POST['role'];
 //    $date_of_birth=$_POST['date_of_birth'];
 //    $mail=$_POST['enmail'];
-    $sql = "SELECT * FROM user WHERE username=?";
+    $sql = "SELECT * FROM user WHERE user_name=?";
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, 's', $username);
     mysqli_stmt_execute($stmt);
@@ -72,7 +72,9 @@ if(isset($_POST['login_btn'])){
         $row = mysqli_fetch_assoc($result);
         $resultPassword = $row['password'];
         if($password === $resultPassword){
+            $_SESSION['user_id']=$row["user_id"];
             $_SESSION['username']=$username;
+            $_SESSION['full_name']=$row["full_name"];
             $_SESSION['password']=$password;
             $_SESSION['role']=$row["role"];
             $_SESSION['date_of_birth']=$row["date_of_birth"];

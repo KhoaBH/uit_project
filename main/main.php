@@ -5,16 +5,26 @@ global $conn;
 session_start();
 if(isset($_SESSION["username"])&&($_SESSION["username"]!="")){
     $user=$_SESSION["username"];
+    $full_name = $_SESSION["full_name"];
     $mail=$_SESSION["mail"];
     $phone=$_SESSION["phone"];
     $role=$_SESSION["role"];
-    $class_id=$_SESSION["class_id"];
     $date_of_birth=$_SESSION["date_of_birth"];
+    $class_name=$_SESSION["class_name"];
+    $gender=$_SESSION["gender"];
+    $class_id = $_SESSION["class_id"];
+    if($gender=="F"){
+        $gender = "Nữ";
+    }
+    else{
+        $gender = "Nam";
+    }
 }
 if(isset($_SESSION['password'])&&($_SESSION['password']!="")){
     $pass=$_SESSION['password'];
 }
-
+    $result = mysqli_query($conn, "SELECT class_name FROM class WHERE id = '$class_id'");
+    $class_name =  mysqli_fetch_array($result)[0];
 // Định nghĩa hàm myFunction()
 function myFunction($class_id) {
     $tmp= $class_id;
@@ -24,6 +34,8 @@ $fetch_event = mysqli_query($conn, "select * from schedule where class_id is nul
 $subject_list = mysqli_query($conn, "select * from subject");
 $subject_list_detail = mysqli_query($conn, "select * from subject");
 $class_list = mysqli_query($conn, "select * from class");
+$substitute_teacher_list= mysqli_query($conn, "select * from user where role='teacher'");
+$attendance_list= mysqli_query($conn, "select * from student where class_id='$class_id'");
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +56,14 @@ $class_list = mysqli_query($conn, "select * from class");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
     <!-- custom css file link  -->
     <link rel="stylesheet" href="style_main.css">
+    <!-- Include plugin -->
+
+    <!-- Or using a CDN -->
+
+    <!-- Include the default stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/wenzhixin/multiple-select/e14b36de/multiple-select.css">
+    <!-- Include plugin -->
+    <script src="https://cdn.rawgit.com/wenzhixin/multiple-select/e14b36de/multiple-select.js"></script>
 </head>
 <body>
 
@@ -65,7 +85,7 @@ $class_list = mysqli_query($conn, "select * from class");
 
             <div class="profile">
                 <img src="images/pic-1.jpg" class="image" alt="">
-                <h3 class="name"><?php echo $user; ?></h3>
+                <h3 class="name"><?php echo $full_name; ?></h3>
                 <p class="role"><?php echo $role; ?></p>
                 <a href="profile.html" class="btn">view profile</a>
                 <div class="flex-btn">
@@ -84,14 +104,14 @@ $class_list = mysqli_query($conn, "select * from class");
         </div>
         <div class="profile">
             <img src="images/pic-1.jpg" class="image" alt="">
-            <h3 class="name"><?php echo $user; ?></h3>
+            <h3 class="name"><?php echo $full_name; ?></h3>
             <p class="role"><?php echo $role; ?></p>
             <a href="profile.php" class="btn">Thông tin cá nhân</a>
         </div>
         <nav class="navbar">
             <a href="profile.php"><i class="fas fa-user"></i><span>Thông tin cá nhân</span></a>
-            <a href="courses.html"><i class="fas fa-graduation-cap"></i><span>Thống kê</span></a>
-            <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>Giáo viên</span></a>
+            <a href="statistic.php"><i class="fas fa-graduation-cap"></i><span>Thống kê</span></a>
+            <a href="main.php"><i class="fas fa-chalkboard-user"></i><span>Sổ đầu bài</span></a>
             <a href="log_out.php"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
         </nav>
     </div>
@@ -108,105 +128,6 @@ $class_list = mysqli_query($conn, "select * from class");
             </select>
             <button class="schedule_create_btn" id="openPageBtn">Tạo lịch sổ đầu bài</button>
         </div>
-<!--        <select id="week_select">-->
-<!--            <option value="1">Tuần 1</option>-->
-<!--            <option value="2">Tuần 2</option>-->
-<!--        </select>-->
-<!--        <table >-->
-<!--            <caption>Thời khóa biểu</caption>-->
-<!--            <tr>-->
-<!--                <th colspan="2">Thời gian</th>-->
-<!--                <th>Thứ 2</th>-->
-<!--                <th>Thứ 3</th>-->
-<!--                <th>Thứ 4</th>-->
-<!--                <th>Thứ 5</th>-->
-<!--                <th>Thứ 6</th>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th rowspan="5" class="schedule_time">Sáng</th>-->
-<!--                <th class="schedule_time">Tiết 1<br>06:45 - 07:45</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!---->
-<!--                <th class="schedule_time">Tiết 2<br>07:35 - 08:20</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th class="schedule_time">Tiết 3<br>08:40 - 09:25</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th class="schedule_time">Tiết 4<br>09:30 - 10:15</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th class="schedule_time">Tiết 5<br>10:25 - 11:10</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th rowspan="5" class="schedule_time">Chiều</th>-->
-<!--                <th class="schedule_time">Tiết 6<br>12:30 - 13:15</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th class="schedule_time">Tiết 7<br>13:25 - 14:10</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th class="schedule_time">Tiết 8<br>14:15 - 15:00</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th class="schedule_time">Tiết 9<br>15:20 - 16:05</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th class="schedule_time">Tiết 10<br>16:10 - 16:45</th>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--                <td></td>-->
-<!--            </tr>-->
-<!--        </table>-->
-
     </div>
 <!--    Schedule_form-->
     <div class="schedule_form" id="schedule_form">
@@ -221,8 +142,8 @@ $class_list = mysqli_query($conn, "select * from class");
                     <div class="form_item">
                         <div class="form_item">
                             <label>Tiết bắt đầu</label>
-                            <select name="start_time" id="start_time">
-                                <option value="-none-">-none-</option>
+                            <select name="start_time" id="start_time" required>
+                                <option value="-none-" disabled selected value="">-none-</option>
                                 <option value="07:30:00">Tiết 1</option>
                                 <option value="08:15:00">Tiết 2</option>
                                 <option value="09:00:00">Tiết 3</option>
@@ -239,8 +160,8 @@ $class_list = mysqli_query($conn, "select * from class");
                     <div class="form_item">
                         <div class="form_item">
                             <label>Tiết kết thúc</label>
-                            <select name="end_time" id="end_time">
-                                <option value="-none-">-none-</option>
+                            <select name="end_time" id="end_time" required>
+                                <option value="-none-" disabled selected value="">-none-</option>
                                 <option value="08:15:00">Tiết 1</option>
                                 <option value="09:00:00">Tiết 2</option>
                                 <option value="10:30:00">Tiết 3</option>
@@ -250,7 +171,7 @@ $class_list = mysqli_query($conn, "select * from class");
                                 <option value="14:15:00">Tiết 7</option>
                                 <option value="15:00:00">Tiết 8</option>
                                 <option value="15:45:00">Tiết 9</option>
-                                <option value="04:30:00">Tiết 10</option>
+                                <option value="16:30:00">Tiết 10</option>
                             </select>
                         </div>
                     </div>
@@ -276,7 +197,7 @@ $class_list = mysqli_query($conn, "select * from class");
                 </div>
                 <div class="form_item">
                     <label>Nội dung môn học</label>
-                    <input class="subject_content" id="subject_content" type="text">
+                    <input class="subject_content" id="subject_content" type="text" required>
                 </div>
                 <div class="form_item">
                     <label>Tài liệu</label>
@@ -292,6 +213,20 @@ $class_list = mysqli_query($conn, "select * from class");
                         </select>
                     </div>
                 </div>
+                <div style="display: flex; width: 100%;justify-content: space-between;">
+                    <label for="checkbox_label"  style="font-size: 20px;">
+                        <input type="checkbox" id="substitute_checkbox" class="substitute_checkbox"> <!-- Ô kiểm -->
+                        Phân công dạy thay <!-- Nhãn -->
+                    </label>
+                    <select name="substitute_teacher" class="substitute_teacher" id="substitute_teacher" style="align-self: flex-end" disabled>
+                        <option disabled selected value="">Chọn giáo viên dạy thay</option>
+                        <?php
+                        while ($result = mysqli_fetch_array($substitute_teacher_list)) {
+                            echo "<option value='" . $result['user_id'] . "'>" . $result['full_name'] . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
                 <div class="submit_btn">
                     <input type="submit" value="Lưu">
                 </div>
@@ -302,7 +237,7 @@ $class_list = mysqli_query($conn, "select * from class");
         <div class="fas fa-times" id="close_btn_detail"></div>
         <div method="POST" class="form_container">
             <form name="schedule_form_detail">
-                <label class="test">Thông tin lịch giảng dạy</label>
+                <label class="test">Thông tin lịch giảng dạy - <?php echo $class_name ?></label>
                 <div class="form_wrap form_grp">
                     <div>
                         <input class="schedule_id" id="schedule_id" style="display:none" type="text"></input>
@@ -335,14 +270,14 @@ $class_list = mysqli_query($conn, "select * from class");
                                 <option value="-none-">-none-</option>
                                 <option value="08:15:00">Tiết 1</option>
                                 <option value="09:00:00">Tiết 2</option>
-                                <option value="10:30:00">Tiết 3</option>
-                                <option value="09:45:00">Tiết 4</option>
+                                <option value="09:45:00">Tiết 3</option>
+                                <option value="10:30:00">Tiết 4</option>
                                 <option value="12:45:00">Tiết 5</option>
                                 <option value="13:30:00">Tiết 6</option>
                                 <option value="14:15:00">Tiết 7</option>
                                 <option value="15:00:00">Tiết 8</option>
                                 <option value="15:45:00">Tiết 9</option>
-                                <option value="04:30:00">Tiết 10</option>
+                                <option value="16:30:00">Tiết 10</option>
                             </select>
                         </div>
                     </div>
@@ -353,6 +288,20 @@ $class_list = mysqli_query($conn, "select * from class");
                         </div>
                     </div>
                 </div>
+                <div style="display: flex; flex-direction: row; font-size:20px">
+                        <span>Giáo viên chính: </span>
+                        <p id="main_teacher_detail" ></p>
+                </div>
+                <lable style=" font-size:20px">
+                    Điểm danh
+                    <select id="attendance_select" multiple="multiple" style="width: 300px;height:50px">
+                        <?php
+                        while ($result = mysqli_fetch_array($attendance_list)) {
+                            echo "<option value='" . $result['student_id'] . "'>" . $result['name'] . "</option>";
+                        }
+                        ?>
+                    </select>
+                </lable>
                 <div class="form_wrap">
                     <div class="form_item">
                         <label>Môn học</label>
@@ -378,14 +327,14 @@ $class_list = mysqli_query($conn, "select * from class");
                 <div class="form_wrap">
                     <div class="form_item">
                         <label>Tình trạng tiết học</label>
-                        <select id="status" name="status" disabled>
+                        <select id="status_detail" name="status" disabled>
                             <option>Chưa bắt đầu</option>
                             <option>Đã hoàn thành</option>
                         </select>
                     </div>
                 </div>
                 <div class="detail_buttons">
-                    <button type="button" class="btn btn-success" id="save_button_detail">Lưu</button>
+                    <button type="button" class="btn btn-success" id="save_button_detail" >Điểm danh</button>
                     <button type="button" class="btn btn-danger" id="delete_button_detail">Xóa</button>
                 </div>
             </form>
@@ -455,7 +404,23 @@ $class_list = mysqli_query($conn, "select * from class");
                         $id = myFunction($_SESSION["class_id"]);
                         $fetch_event = mysqli_query($conn, "select * from schedule where class_id='$id'");
                         while($result = mysqli_fetch_array($fetch_event))
-                        { ?>
+                        {
+                            $main_teacher_id = $result['teacher_id'];
+                            $main_teacher = mysqli_query($conn, "select full_name from user where user_id = '$main_teacher_id'");
+                            $main_teacher = mysqli_fetch_array($main_teacher)[0];
+                            $attendance_list = json_encode($result['attendance_list']);
+                            $color = '#CCCCCC'; // Màu mặc định
+                            if ($result['teacher_id'] === $_SESSION["user_id"] ||$result['sub_teacher_id'] === $_SESSION["user_id"]) { // Thay some_condition bằng điều kiện cụ thể của bạn
+                                $color = '#0096FF'; // Đổi màu thành xanh lá nếu điều kiện được đáp ứng
+                            }
+                            if (strtotime($result['end_time']) < time() && $result['completed'] == 1) {
+                                $color = '#2ea44f'; // Note Xám: Đã qua thời gian , Xanh lá: Lịch avalable do mình đăng ký, Xanh dương: lịch của giáo viên khác
+                            }
+                            else if(strtotime($result['end_time']) < time() && $result['completed'] == 0){
+                                $color = '#de0a26';
+                            }
+                            ?>
+
                         {
                             title: '<?php echo '<i class="fa fa-book"></i> ' . $result['subject_name'] . '<br>' .'<i class="fa fa-info-circle"></i> '. $result['description']; ?>',
                             start: '<?php echo $result['start_time']; ?>',
@@ -466,8 +431,14 @@ $class_list = mysqli_query($conn, "select * from class");
                                 end_time: '<?php echo $result['end_time']; ?>',
                                 description: '<?php echo $result['description']; ?>',
                                 schedule_id: '<?php echo $result['schedule_id']; ?>',
+                                teacher_id: '<?php echo $result['teacher_id']; ?>',
+                                class_id: '<?php echo $result['class_id']; ?>',
+                                attendance_list: '<?php echo $attendance_list ?>',
+                                main_teacher:'<?php echo $main_teacher ?> ',
+                                status:'<?php echo $result['completed']; ?>',
                             },
-                            color: '#0096FF',
+
+                            color: '<?php echo $color; ?>',
                             textColor: 'white'
                         },
                         <?php } ?>

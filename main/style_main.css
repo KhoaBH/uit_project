@@ -551,7 +551,7 @@ h1.heading{
     color:var(--black);
 }
 .form_container .form_item{
-    margin-bottom: 25px;
+    margin-bottom: 5px;
 }
 /*.form_container input[type=text] {*/
 /*    width: 10%;*/
@@ -691,4 +691,109 @@ td.fc-more-cell {
     font-size:18px;
     order: -1;
     border-radius: 5px;
+}
+/* Label Styling */
+.substitute_checkbox_label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 10px; /* Adjust spacing as needed */
+    margin-right: 10px;
+}
+
+/* Checkbox Styling */
+.substitute_checkbox {
+    appearance: none; /* Remove default checkbox appearance */
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 10px; /* Adjust spacing as needed */
+    transition: background-color 0.3s ease;
+}
+
+.substitute_checkbox:checked {
+    background-color: #007bff; /* Change color on check */
+}
+
+/* Label Text Styling */
+.substitute_checkbox_label span {
+    font-weight: normal; /* Adjust font weight as needed */
+    font-size: 35px;
+}
+.substitute_teacher{
+    align-self: self-end;
+    font-size:15px;
+    border: 1px solid var(--table-cl);
+    margin-bottom: 5px;
+    border-radius: 5px;
+    width:250px;
+    border-color: #222222;
+}
+#attendance_select{
+    font-size:15px;
+}
+.ms-drop span{
+    font-size: 15px;
+}
+.ms-drop input[type="checkbox"] {
+    vertical-align: middle;
+    margin: 0 0 0;
+    width: 17px;
+    height: 17px;
+    border-radius: 5px;
+}
+
+/*statistic.php*/
+.statistic_container{
+    display:flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+
+}
+.stat{
+    display: flex;
+    background-color: white;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 5px;
+    margin-top:10px;
+    flex-direction: column;
+    width: 190px;
+    height: 200px;
+    box-shadow:2px 2px 2px 2px rgba(0,0,0,0.15);
+
+
+}
+.bx.bx-accessibility {
+    font-size: 50px; /* Kích thước biểu tượng */
+    color: #663190;
+}
+.bx.bxs-calendar-x {
+    font-size: 50px; /* Kích thước biểu tượng */
+    color: #f76040;
+}
+.bx.bxs-doughnut-chart {
+    font-size: 50px; /* Kích thước biểu tượng */
+    color: #264de4;
+}
+.bx.bxs-cube-alt {
+     font-size: 50px; /* Kích thước biểu tượng */
+     color: #c68844;
+ }
+.bx.bxs-crown{
+    font-size: 50px; /* Kích thước biểu tượng */
+    color: #e50618
+;
+}
+.stat_label{
+    font-size: 20px;
+}
+.stat_value{
+    font-size:40px;
+}
+#completionChart {
+    width: 300px;
+    height: 200px;
 }
