@@ -35,7 +35,7 @@ $subject_list = mysqli_query($conn, "select * from subject");
 $subject_list_detail = mysqli_query($conn, "select * from subject");
 $class_list = mysqli_query($conn, "select * from class");
 $substitute_teacher_list= mysqli_query($conn, "select * from user where role='teacher'");
-$attendance_list= mysqli_query($conn, "select * from student where class_id='$class_id'");
+$attendance_list= mysqli_query($conn, "select * from user where class_id='$class_id' and role='student'");
 ?>
 
 <!DOCTYPE html>
@@ -110,7 +110,7 @@ $attendance_list= mysqli_query($conn, "select * from student where class_id='$cl
         </div>
         <nav class="navbar">
             <a href="profile.php"><i class="fas fa-user"></i><span>Thông tin cá nhân</span></a>
-            <a href="statistic.php"><i class="fas fa-graduation-cap"></i><span>Thống kê</span></a>
+            <a href="statistic.php" id="stat"><i class="fas fa-graduation-cap"></i><span id="stat">Thống kê</span></a>
             <a href="main.php"><i class="fas fa-chalkboard-user"></i><span>Sổ đầu bài</span></a>
             <a href="log_out.php"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
         </nav>
@@ -227,7 +227,7 @@ $attendance_list= mysqli_query($conn, "select * from student where class_id='$cl
                         ?>
                     </select>
                 </div>
-                <div class="submit_btn">
+                <div class="submit_btn" id ="submit_btn">
                     <input type="submit" value="Lưu">
                 </div>
             </form>
@@ -297,7 +297,7 @@ $attendance_list= mysqli_query($conn, "select * from student where class_id='$cl
                     <select id="attendance_select" multiple="multiple" style="width: 300px;height:50px">
                         <?php
                         while ($result = mysqli_fetch_array($attendance_list)) {
-                            echo "<option value='" . $result['student_id'] . "'>" . $result['name'] . "</option>";
+                            echo "<option value='" . $result['user_id'] . "'>" . $result['full_name'] . "</option>";
                         }
                         ?>
                     </select>
@@ -419,6 +419,9 @@ $attendance_list= mysqli_query($conn, "select * from student where class_id='$cl
                             else if(strtotime($result['end_time']) < time() && $result['completed'] == 0){
                                 $color = '#de0a26';
                             }
+                            if($result['completed'] == 1){
+                                $color = '#2ea44f';
+                            }
                             ?>
 
                         {
@@ -471,7 +474,8 @@ $attendance_list= mysqli_query($conn, "select * from student where class_id='$cl
                 });
             });
         }
-
+        var role = '<?php echo $role; ?>';
+        hideElementOnLoad(role);
         // if (document.getElementById('calendar')) {
         //     renderCalendar();
         // }

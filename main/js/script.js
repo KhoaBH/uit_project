@@ -123,10 +123,12 @@ function showSchedule(data){
     if(data.event._def.extendedProps.status == 1){
         status_object.value = "Đã hoàn thành";
         save_button.disabled = true;
+        save_button.innerHTML = "Đã Hoàn Thành"
     }
     else{
-        status_object.value = "Chưa hoàn thành";
+        status_object.value = "Chưa bắt đầu";
         save_button.disabled = false;
+        save_button.innerHTML = "Điểm danh"
     }
 
     //render form
@@ -285,6 +287,22 @@ document.getElementById('substitute_checkbox').addEventListener('click', functio
 $("#attendance_select").multipleSelect({
     filter: true
 });
+function hideElementOnLoad($role) {
+    var element = document.getElementById('openPageBtn');
+    var element1 = document.getElementById('stat');
+    var element3 = document.getElementById('save_button_detail');
+    var element4 = document.getElementById('delete_button_detail');
+    // var element1 = document.getElementById('openPageBtn');
+
+
+    if ($role == 'student') {
+        element1.style.display = 'none';
+        element.style.display = 'none';
+        element3.style.display = 'none';
+        element4.style.display = 'none';
+    }
+}
+
 
 
 

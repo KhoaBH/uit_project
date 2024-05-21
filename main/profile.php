@@ -93,7 +93,7 @@ if(isset($_SESSION['password'])&&($_SESSION['password']!="")){
     </div>
     <nav class="navbar">
         <a href="profile.php"><i class="fas fa-user"></i><span>Thông tin cá nhân</span></a>
-        <a href="statistic.php"><i class="fas fa-graduation-cap"></i><span>Thống kê</span></a>
+        <a href="statistic.php" id="stat"><i class="fas fa-graduation-cap"></i><span id="stat">Thống kê</span></a>
         <a href="main.php"><i class="fas fa-chalkboard-user"></i><span>Sổ đầu bài</span></a>
         <a href="log_out.php"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
     </nav>
@@ -134,7 +134,8 @@ if(isset($_SESSION['password'])&&($_SESSION['password']!="")){
                         <i class="fas fa-book"></i>
                         <div>
                             <span><?php echo $class_name; ?></span>
-                            <p>Học sinh lớp</p>
+                            <p><?php if($role=="Teacher") echo "Giáo viên chủ nhiệm";
+                                    else echo "Lớp"?></p>
                         </div>
                     </div>
                 </div>
@@ -153,7 +154,13 @@ if(isset($_SESSION['password'])&&($_SESSION['password']!="")){
     </section>
 </div>
 <!-- custom js file link  -->
-<script src="js/script.js"></script>
+<script src="js/script.js">
+
+</script>
+<script>
+    var role = '<?php echo $role; ?>';
+    hideElementOnLoad(role);
+</script>
 
 
 </body>
